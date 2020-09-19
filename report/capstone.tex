@@ -1,0 +1,944 @@
+\documentclass[11pt]{article}
+
+% This report was written starting from a tex file exported from a Jupyter Notebook
+% and then manually modified and integrated
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Accident analysis and severity prediction}
+    \author{Antonio Lotti}
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{\thetitle}
+\lhead{\theauthor}
+
+\setlength{\headheight}{14pt}%
+
+\begin{document}
+    
+    \maketitle
+    
+\begin{abstract}
+This study was done in the context of the Coursera course Applied Data Science Capstone (\url{https://www.coursera.org/learn/applied-data-science-capstone}) of the IBM Data Science Professional Certificate.\\
+The case study for this project was the prediction of the severity of a car accident.\\
+The present report summarizes the data acquisition and cleaning, the exploratory data analysis, the details of the predictive models developed and their testing and results over a set of independent data.
+The full notebook can be found on Github in the repository \url{https://github.com/AntonioBL/Coursera_Capstone}.
+\end{abstract}
+
+\tableofcontents
+
+    \hypertarget{introduction}{%
+\section{Introduction: the problem}\label{introduction}}
+
+One of the main concerns of our modern cities is road traffic. Daily jobs, as well as shopping, spare time and recreation activities, sports and social activities, cause a large number of people to move every day on our road system, sometimes for a considerable amount of their time.\\
+Road traffic is not only a problem for cities. Sometimes, for example in small centers with poor public transportation service, the use of a motor vehicle becomes a necessity for everyday work and activities. Public road transport, non-motorized vehicles, such as bicycles, and pedestrians are also part of the movements on our roads.
+
+Road accidents have thus become a huge problem for our activities.\\
+They are a problem not only in terms of the risk we run when driving, or walking, or cycling on the roads, but also in terms of time we lose when stuck in queue after a road accident. For the society, road accidents are a cost in terms of human lives, and in terms of money and resources spent in preventing accidents and taking care of injured people.
+
+Road accidents thus represent a great loss from a lot of different points of view for our society.
+
+The ability to estimate the likelihood of a road accident and its possible severity given a certain set of conditions has therefore become a hot topic in the last decades. Predictive models that take into account for example road, time, place and weather conditions to predict the severity of a possible accident can be of advantage for different groups.\\
+Among the main stakeholders we could include governments, police forces, road authorities, who can use those predictive models to identify the most critical conditions and determine the most effective countermeasures to reduce the number or the severity of road accidents, for example patrolling particular areas during critical times.\\
+Even normal drivers, cyclists or pedestrians could benefit from these studies, for example they could be warned about dangerous situations, or in case of an accident these models could predict the possible severity and possible time needed for the traffic to resume its normal course. Drivers could also be warned by driving assistance systems using these models, when the road and weather conditions require a more focused attention because of a higher probability of a severe accident. Along these lines, self-driving systems could implement further security protocols to be adopted at the appearance of such critical circumstances.
+Insurance companies could also benefit from such predictive models, identifying the level of criticality for the typical road routine of people (e.g. when going to work).
+
+The aim of this brief study is to develop a predictive model of accident severity, considering as input variables a set of risk factors such as, for example, weather and road conditions, time of the day, or specific road intersection type.
+
+    \hypertarget{data-source}{%
+\section{Data acquisition and cleaning}\label{data-source}}
+
+The data used in this study were collected by UK police forces and made available to the public, excluding the sensitive variables, through the open data UK government site (\url{https://data.gov.uk/}).
+
+The database on UK accidents holds records on road accidents with the current set of definitions and detail of information since 1979. UK police forces use a standard form STAT19 (\url{https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/230590/stats19.pdf}) to report information on road accidents.\\ 
+These datasets are made available to the public under the Open Government Licence (\url{http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/}).
+
+The web address for the download is the following:\\
+\url{https://data.gov.uk/dataset/cb7ae6f0-4be6-4935-9277-47e5ce24a11f/road-safety-data}.
+
+The databases provide detailed data about the circumstances of road accidents involving injuries or deaths. In this latter case the data refer to people killed immediately or who died within 30 days since the accident.
+
+For this study, only the most recent years were taken into account. In particular, only the 2017 (\texttt{Acc.csv}) and 2018 (\texttt{dftRoadSafetyData\_Accidents\_2018.csv}) `accident' databases were considered and merged into a single database (the details of `casualties' and 'vehicles' databases were not taken into account). The 2016 database (\texttt{dftRoadSafety\_Accidents\_2016.csv}) was used for model testing.
+
+In the UK Government open data site an additional table is available  with weight corrections for the `Slight' and `Serious' labels of the accident severity class; this is because the evaluation of accident severity changed during time. For each accident falling in one of those labels, the table introduces a fractional split between these two labels; for example one `Serious' accident could be split into 0.9 `Serious' an 0.1 `Slight'.\\
+Such weight corrections were not used in this study.
+
+The main strengths of these databases are the following:
+\begin{itemize}
+\tightlist
+\item
+their data are rigorously validated before distribution, for example by the relevant police forces or local road authorities;
+\item
+they are collected with the same methodology across the whole UK;
+\item
+they include a lot of details regarding the accidents.
+\end{itemize}
+
+The main weaknesses of these data are due to the fact that they record only accidents involving at least one vehicle in which at least one person was injured, and which were reported to the police. The first point determines the fact that these data do not contain details of damage-only accidents, i.e. with no human casualties. The second point has the consequence that accidents on private roads or car parks are not reported, as well as a considerable proportion of non-fatal injury accidents.  
+This may determine an under-sampling of non-fatal injury accidents.
+
+All the data variables are coded instead of displaying textual strings; for some columns `-1' means an unknown or undefined value. Each accident is identified by a unique accident\_index; 31 additional columns, with meaningful names, describe the accident details.
+
+The accident severity column does not contain null values. Some of the other columns contains null (or -1) values.  
+For the analysis, the following columns were dropped:
+\begin{itemize}
+\item
+`Accident\_Index', since no connection to the casualties or vehicle databases were taken into account;
+\item
+`Location\_Easting\_OSGR', `Location\_Northing\_OSGR', `Longitude', `Latitude', `Police\_Force', `Local\_Authority\_(District)', `Local\_Authority\_(Highway)', `1st\_Road\_Number', `2nd\_Road\_Number', `LSOA\_of\_Accident\_Location', since the geographical position or the department in which the accident happened was not taken into account;
+\item
+`Junction\_Control', `2nd\_Road\_Class', since roughly 40\% of the values for these columns were null;
+\item
+`Pedestrian\_Crossing-Human\_Control', `Pedestrian\_Crossing-Physical\_Facilities', because a distinction between accidents involving pedestrians and other accidents was not considered in this study;
+\item
+`Did\_Police\_Officer\_Attend\_Scene\_of\_Accident', `Number\_of\_Vehicles', `Number\_of\_Casualties', because the aim of the model is to predict the severity of an accident given the particular weather, time and road conditions, not the possible number of vehicles involved and casualties, or the attendance of a police officer.
+\end{itemize}
+
+From the `Date' column only the month was kept; from the `Time' column only the hour was kept.\\ 
+For columns `Special\_Conditions\_at\_Site' and `Carriageway\_Hazards' null values were substituted with the mode, corresponding to `no special conditions' (value `0') and `no carriageway hazards' (value `0'), respectively; in case of particular conditions it is highly probable that it would have been reported by the those attending to the accident. A similar reasoning can be done for the missing values of `Junction\_Detail', considering `Not at junction or within 20 metres' (i.e. `0' value) as the most probable case for those accidents (0.55\% of the total accidents).\\ 
+All other rows containing null values in at least one of the variables taken into account were dropped. The original combined database contained 252617 rows. After this cleaning operation, the database contained 249441 rows; less than 1.5\% of the initial data were lost.
+
+In addition to the accident severity column (`Accident\_Severity'), which will be used as target column, 13 other columns were kept:
+\begin{itemize}
+\item
+`Day\_of\_Week', `Hour', `Month', to identify the time during the year, the week and the day when the accident happened;
+\item
+`1st\_Road\_Class', `Road\_Type', `Speed\_limit', `Junction\_Detail', `Urban\_or\_Rural\_Area', to identify the type of road involved in the accident, and its characteristics;
+\item
+`Light\_Conditions', `Weather\_Conditions' to identify the visibility during the accident;
+\item
+`Road\_Surface\_Conditions', `Special\_Conditions\_at\_Site', `Carriageway\_Hazards', to identify the temporary characteristics of the road when the accident happened.
+\end{itemize}
+
+    \hypertarget{data-evaluation}{%
+\section{Exploratory Data Evaluation}\label{data-evaluation}}
+
+Some preliminary visual investigations were carried on to have a better understanding of the relationships between data and their impact on the accident severity target.
+
+    \hypertarget{accident-severity-distribution}{%
+\subsection{Accident Severity Distribution}\label{accident-severity-distribution}}
+
+From the overall histogram distribution of accident severity, shown in the following figure, roughly 80.4\% of the accidents in the sample were considered slight accidents (i.e.~no deaths and no long term hospitalization or serious injuries). Roughly 18.2\% were serious injuries and roughly 1.3\% were fatal accidents.
+
+The severity distribution was remarkably unbalanced towards slight injury accidents. It was important to take into account this fact when building the prediction model.
+
+    \begin{center}
+    \adjustimage{max size={0.5\linewidth}{0.5\paperheight}}{output_26_1.png}
+    \end{center}
+
+    \hypertarget{correlation-map}{%
+\subsection{Correlation Map}\label{correlation-map}}
+
+The first analysis performed on the data was the creation of a correlation map to verify if it was possible to reduce the number of independent variables and redundant information.
+
+    \begin{center}
+    \adjustimage{max size={0.6\linewidth}{0.6\paperheight}}{output_29_0.png}
+    \end{center}
+
+The correlation map (in the above figure) showed a certain degree of positive correlation between speed limit and `urban or rural area' variables, and negative correlation between speed limit and `1st road class'.\\
+The correlation of these variables was visualized by mean of scatter plots, shown in the following figures, where the dimension of the marker is proportional to the number of counts.
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_31_0.png}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_32_0.png}
+    \end{center}
+
+The relation between `Urban or Rural Area' and speed limit was more evident, since most of the low velocity roads (30 mph speed limit) were in urban areas, while most of the high velocity roads (60-70 mph speed limit) were in rural areas.
+
+Motorways are high speed roads, with speed limit in general 70 mph. A, B and C road speed limit spanned over the full range. Most of the unclassified roads were low velocity roads (30 mph).
+
+Because of the partial correlation between the data and in order to simplify the model, during this study it was decided to drop `1st\_Road\_Class' and `Urban\_or\_Rural\_Area' columns when training the models.
+
+    \hypertarget{speed-limit}{%
+\subsection{Speed Limit}\label{speed-limit}}
+
+The Accident Severity distribution as a function of road speed limit was plotted as a histogram count distribution, as well as a histogram distribution in which the bar heights were normalized for each speed limit value to the total number of counts of accidents at that value. This kind of graphic could give a better visualization of factors influencing the severity of the accidents.\\
+Both graphs are shown in the following figure. The bottom row shows only the serious and fatal accidents.
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_35_0.png}
+    \end{center}
+
+Most of the accidents in the database happened at low velocities (30~mph). A secondary peak appeared at 60~mph.
+
+However, when considering the relative weight inside the speed limit variable, for low speed limit the percentage of serious and fatal accidents was lower than in the case of large speed limit. In particular, the relative weight of fatal accidents reached its maximum for speed limit 60~mph. Indeed, the number of fatal accidents at 30~mph limit was roughly the same as 60~mph limit, but the total number of accidents at 30~mph was much larger than in the 60~mph case.
+
+The histograms of counts and relative weights were used to visually evaluate all the different variables of the database.
+
+    \hypertarget{urban-or-rural-area}{%
+\subsection{Urban or Rural Area}\label{urban-or-rural-area}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_38_0.png}
+    \end{center}
+
+Most of the accidents happened in urban areas. However, when considering relative weights, the relative percentage of serious and fatal accidents in rural areas was higher. As found with the correlation analysis, this is probably caused by the fact that high velocity roads were more frequent in rural areas.\\
+This variable was dropped in the model fitting.
+
+    \hypertarget{first-road-class}{%
+\subsection{First Road Class}\label{first-road-class}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_41_0.png}
+    \end{center}
+
+The classes of the roads with the majority of accidents were: A and Unclassified\\
+When considering the relative weight of accidents, serious accidents had a maximum for B class roads. Fatal accident relative weight slightly decreased when passing from Motorways and A classes to B and C classes. This is probably due to the partial correlation of road class and speed limit.\\
+This variable was also dropped for the model fitting phase.
+
+    \hypertarget{hour}{%
+\subsection{Hour}\label{hour}}
+
+When looking at the distribution with respect to hour of the day, there were two peaks corresponding to rush hours, between 7 and 9 and between 15 and 18. The max accident count happened at 18, during evening rush hour.\\
+The plot of relative weight of accidents, i.e.~number of accidents normalized to the total number of accidents happened at that hour, showed that during morning rush hour the relative weight of slight accidents was larger, while at night (from 23 to 5) the relative weight of fatal accidents was larger, with a peak around 4.
+
+The hour variable was grouped in a series of time periods: Morning Rush (6-9), Day (10-14), Evening Rush (15-18), Evening (19-22), Night (23-5).
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_47_0.png}
+    \end{center}
+
+These time period still exhibited the features observed in the `hour' variable, namely the peaks at rush hours and the higher relative weight (shown in the graphs on the right in the above figure) of serious and fatal accidents at night.
+
+    \hypertarget{day-of-the-week}{%
+\subsection{Day of the Week}\label{day-of-the-week}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_49_0.png}
+    \end{center}
+
+During Saturdays and Sundays the frequency of accidents was slightly lower. There was a peak on accident counts on Fridays.
+
+However, there was no clear correlation between relative weight of accident severity and the day of the week, except for a small increase in the relative weight of serious and fatal accident in the weekend.
+
+The combined contribution of day of the week and time period was analyzed, as shown in the following figure.
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_51_0.png}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_52_0.png}
+    \end{center}
+
+The days in the weekend (Saturday and Sunday) featured a different count distribution than the other days; this was particularly evident for rush hours. The relative weights were similar for all the days.\\
+The variable `Day of the Week' was therefore reduced to a variable `Weekend' indicating if the day belonged to the weekend or if it was a working day.
+    
+    \hypertarget{month}{%
+\subsection{Month}\label{month}}
+    
+There was no clear indication of the influence of months on accident severity. The count distribution showed three small maxima at January, June and November.\\
+However, the relative weight distribution was basically the same for all months.
+
+The months were grouped by meteorological season, as shown in the following graphs.
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_61_0.png}
+    \end{center}
+
+Both count plot and relative weight plot seemed similar among the different seasons.
+
+    \hypertarget{road-type}{%
+\subsection{Road Type}\label{road-type}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_63_0.png}
+    \end{center}
+
+The majority of accidents happened on single carriageway roads, followed by dual carriageway roads and roundabouts.
+
+When considering the relative weight (right part of the above figure), dual carriageway roads had the highest relative value of fatal accidents. This is probably related to the fact that these roads have higher speed limits.
+
+Roundabouts showed the smallest relative weight of fatal accidents for the road type category.
+
+    \hypertarget{junction-details}{%
+\subsection{Junction Details}\label{junction-details}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_66_0.png}
+    \end{center}
+
+For what concerns the accident count, the majority of the accidents that happened in correspondence of road junctions happened at T or staggered junctions, followed by normal crossroads and roundabouts.
+
+When considering the relative weight of accident severity (right part of the above figure), the junctions with higher relative weight of serious accidents were `T or staggered junctions' and `private drives'. The maximum of the relative weight of fatal accidents was for `slip road junctions', followed by `private drives', `T or staggered junctions' and `normal crossroads'.
+
+    \hypertarget{road-surface-conditions}{%
+\subsection{Road Surface Conditions}\label{road-surface-conditions}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_69_0.png}
+    \end{center}
+
+For what concerns road conditions, most of the accidents in the database happened on dry roads, followed by wet roads.
+
+The relative weight of serious accidents showed a maximum for flood, followed by wet and dry roads. The relative weight of fatal accidents was higher for wet and flood road surfaces.
+
+Snow and ice surface conditions showed the lowest relative weight of serious and fatal accidents. Probably, prevention measures, modern winter equipment, together with a more conscious attitude of people during these extreme surface conditions, contributed to this fact. However, the number of statistical samples for these two cases was small, and the presence of only few samples could bias the analysis.
+
+    \hypertarget{special-conditions}{%
+\subsection{Special Conditions}\label{special-conditions}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_72_0.png}
+    \end{center}
+
+Most of accidents happened without special road conditions. The majority of accidents that happened with special road conditions were in correspondence of roadworks.\\
+The weight plots showed that the maximum relative weight of serious accidents was for defective road surfaces, followed by oil and mud. For fatal accidents, the maximum relative weight corresponded to defective road signs and defective road surface.
+
+    \hypertarget{carriageway-hazards}{%
+\subsection{Carriageway Hazards}\label{carriageway-hazards}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_75_0.png}
+    \end{center}
+
+In case of hazards in the carriageway, the majority of accidents happened for objects or animals in the carriageway (note that most of accidents did not have hazards in the carriageway).\\
+The relative weight plots showed that the presence of a previous accident had a higher relative weight of serious and fatal severity with respect to the other cases of carriageway hazards. High relative serious severity happened also in the case of general objects in the carriageway.
+
+The cases of hazards in the carriageway had a relatively small number of statistical samples different from the case of `No carriageway hazards', so statistical considerations on them could be biased.\\
+This relatively small statistical sample led to the exclusion of this column in the model training phase.
+
+    \hypertarget{light-conditions}{%
+\subsection{Light Conditions}\label{light-conditions}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_78_0.png}
+    \end{center}
+
+The majority of accidents happened during daylight.\\
+The relative weight plot showed that accidents happening in presence of `darkness' conditions had higher serious and fatal relative weights. In particular, the situation with the lowest visibility, i.e.~`darkness without lighting', had the highest relative weight for both serious and fatal severity.\\
+This confirms the previous observation of a slight higher severity risk for accidents that happened at night.
+
+    \hypertarget{weather-conditions}{%
+\subsection{Weather Conditions}\label{weather-conditions}}
+
+    \begin{center}
+    \adjustimage{max size={0.8\linewidth}{0.8\paperheight}}{output_81_0.png}
+    \end{center}
+
+The majority of accidents happened for fine weather, the second most frequent case was rain.\\
+The relative weight plot showed that the highest risk was for fog and high wind conditions (`fine with high winds' and `rain with high winds').\\
+The fact that the highest relative risk was in the case of fog highlights the danger of low visibility conditions.
+
+    \hypertarget{model}{%
+\section{Models}\label{model}}
+
+After the identification of the independent variables (risk factors), the target variable (i.e. `Accident\_Severity') and a preliminary data analysis and visualization, a series of predictive models were trained on the data.
+
+The problem was a classification problem, since the target variable was a set of labels for accident severity: `Slight' (3), `Serious' (2), `Fatal' (1). The original data already coded the different variables as numerical variables. Among the variables chosen for the model fitting phase, the only parameter with a real numerical ordering was the speed limit (and possibly time period and season), while for most of the other variables the numbers were simply different labels.\\
+All these considerations led to the choice of classification models for the prediction.
+
+For the classification predictor, the following base estimators were considered and trained:
+\begin{itemize}
+\item K-Nearest Neighbors,
+\item Decision Tree,
+\end{itemize}
+and the following ensemble methods:
+\begin{itemize}
+\item Bootstrap Aggregation (Bagging) Classifier,
+\item Adaptive Boosting (AdaBoost) Classifier,
+\item Random Forest Classifier.
+\end{itemize}
+
+Since the data are highly unbalanced, as described in Section \ref{data-evaluation}, a simple \texttt{accuracy} score could not be used as the evaluation metric used for model scoring.\\
+Indeed, since the majority class (`Slight' severity) covers roughly 80\% of the cases, a simple model which for every input value returns only that majority class label would score 0.8 out of 1 with the \texttt{accuracy} metrics, but all the other classes (i.e. the "interesting" cases) would be completely misclassified.
+
+The metrics chosen for model evaluation was the \texttt{balanced accuracy score}. It is defined as the average of recall (i.e. true positives divided by the number of real positives) obtained on each class.\\
+Since the number of accident severity classes was 3, the classification model assigning all data to the majority class would score only 0.33 with such metrics. The \texttt{balanced accuracy score} ranges from 0 to 1, with 1 being the best score (i.e. all samples correctly classified).
+
+As explained during the exploratory data evaluation, `1st\_Road\_Class' and `Urban\_or\_Rural\_Area' variables were dropped because of their correlation with `Speed\_limit', and in order to further simplify the model training, `Carriageway\_Hazards' was also dropped, because the number of serious or fatal accidents with hazards different from `None' was very small compared to the total of cases.
+
+The features over which the models were trained were ten: `Road\_Type', `Speed\_limit', `Junction\_Detail', `Light\_Conditions', `Weather\_Conditions', `Road\_Surface\_Conditions', `Special\_Conditions\_at\_Site', `Time\_Period', `Weekend', `Season'.
+
+    \hypertarget{k-nearest-neighbors-knn}{%
+\subsection{K Nearest Neighbors (KNN)}\label{k-nearest-neighbors-knn}}
+
+The feature columns were scaled with a \texttt{StandardScaler} for the KNN Classifier fit, which uses a distance-based metrics.\\
+The number of neighbors (K) parameter was tuned with cross validation (4 folds) on the full set of training data. The scoring metrics was the \texttt{balanced accuracy score}.
+
+The average values of the scores from the 4 different folds of the cross validation had a peak at K=2, i.e. two neighbors. The average score value was quite low for this classifier, around 0.35.
+
+The model was trained with these parameters: \texttt{n\_neighbors=2}.
+
+    \hypertarget{decision-tree}{%
+\subsection{Decision Tree}\label{decision-tree}}
+
+For the Decision Tree and the ensemble classification models, particular attention was paid to the unbalancing of data classes.\\
+In particular, for the Decision Tree the option \texttt{class\_weight='balanced'} was used. This options weights the contribution of the samples by assigning to each sample a weight inversely proportional to its class frequency (i.e. total count of samples in that class).\\
+This situation is roughly equivalent to the \emph{oversampling} of the data belonging to the least populated categories, since the weighted numbers of the samples belonging to different classes becomes the same (for randomly extracted data), without dropping data from the most populated classes.
+
+The number of branches, i.e. \texttt{max\_depth} parameter, was optimized with cross validation (5 folds) on the full set of training data. The scoring metrics was the \texttt{balanced accuracy score}.
+
+The average values of the scores from the 5 different folds of the cross validation had a peak at number of branches around 6-9, with corresponding average score around 0.46.
+
+The model was trained with these parameters:\\
+\texttt{criterion='entropy', max\_depth=7, class\_weight='balanced'}.
+
+    \hypertarget{bootstrap-aggregating-bagging-classifier}{%
+\subsection{Bootstrap Aggregating (Bagging) Classifier}\label{bootstrap-aggregating-bagging-classifier}}
+
+A Bagging classifier is an ensemble predictor that fits a series of base classifiers each on random subsets of the original data and then aggregates their individual predictions in a final prediction.\\
+For the Bagging Classifier case, the underlying base estimator was declared as a Decision Tree with \texttt{class\_weight='balanced'}, to overcome the problem of strong data unbalancing; this is roughly equivalent to an oversampling of each of the random subsets considered during model training.\\
+All input data features were considered in the fit.
+
+The number of estimators parameter \texttt{n\_estimators}, i.e. the number of base estimators in the ensemble, was tuned with cross validation (4 folds) on the training data. The values of mean balanced accuracy was not changing much with \texttt{n\_estimators} in the range 100-400, with balanced accuracy score around 0.406-0.407.
+
+The model was trained with these parameters:\\
+\texttt{base\_estimator = DecisionTreeClassifier(class\_weight = 'balanced'), max\_features = X.shape[1], n\_estimators = 300}.
+
+    \hypertarget{adaptive-boosting}{%
+\subsection{Adaptive Boosting (AdaBoost) Classifier}\label{adaptive-boosting}}
+
+An AdaBoost classifier is an ensemble predictor using an ordered series of a base classifier, that are trained on the original data, in which subsequent classifiers are trained on the dataset with adjusted weights to increase the impact of the cases misclassified by the previous classifiers.\\
+Analogously to what was done for the Bagging Classifier, in order to overcome the unbalancing of the dataset, the base model for the AdaBoost classifier was chosen as a Decision Tree with \texttt{class\_weight='balanced'}.
+
+The number of estimators parameter \texttt{n\_estimators} was tuned with cross validation (4 folds) on the training data. The values of mean balanced accuracy was not changing much with \texttt{n\_estimators} in the range 40-80, with balanced accuracy score around 0.403-0.404.
+
+The model was trained with these parameters:\\
+\texttt{base\_estimator = DecisionTreeClassifier(class\_weight = 'balanced'), n\_estimators = 70}.
+
+    \hypertarget{random-forest-classifier}{%
+\subsection{Random Forest Classifier}\label{random-forest-classifier}}
+
+A Random Forest Classifier is an ensemble predictor which creates and fits a number of decision tree classifiers on sub-samples of the data and averages (or takes the mode of) their classifications.\\
+In this study the Random Forest was used together with \texttt{class\_weight='balanced'}, so that each sample was weighted inversely proportional to its class frequency. Similarly to the Decision Tree case, this is roughly equivalent to oversampling the classes with low counts.\\
+The parameter \texttt{max\_features} was left at its default value, i.e. square root of the number of features.
+
+The number of estimators \texttt{n\_estimators} and maximum depth of the tree classifiers \texttt{max\_depth} parameters were tuned with a grid cross validation (4 folds) on the training data.
+
+The best parameters found with the grid search were around 6-7 for \texttt{max\_depth} and 50-70 for \texttt{n\_estimators}, with balanced accuracy around 0.46-0.47.
+
+The model was trained with these parameters:\\
+\texttt{class\_weight = 'balanced', max\_depth = 7, n\_estimators = 70}.
+
+    \hypertarget{balanced-models}{%
+\subsection{Undersampling Models from imblearn}\label{balanced-models}}
+
+In addition to the previous models, which mainly used an artificial oversampling of the data, two ensemble models based on \emph{undersampling} of the most populated classes were used:
+\begin{itemize}
+\item Balanced Bagging Classifier;
+\item Balanced Random Forest Classifier.
+\end{itemize}
+These models were imported from library \texttt{imblearn.ensemble}.
+
+    \hypertarget{balanced-bagging-classifier}{%
+\subsubsection{Balanced Bagging Classifier}\label{balanced-bagging-classifier}}
+
+The Balanced Bagging Classifier from library \texttt{imblearn} is similar to the \texttt{sklearn} implementation, but it uses an additional step to balance the training set at fit time with \texttt{RandomUnderSampler}.
+
+The number of estimators parameter \texttt{n\_estimators} was tuned with cross validation (4 folds) on the training data. The values of mean balanced accuracy was not changing much with \texttt{n\_estimators} in the range 150-400, with balanced accuracy score around 0.43.
+
+The model was trained with these parameters:\\
+\texttt{max\_features = X.shape[1], n\_estimators = 200}.
+        
+    \hypertarget{balanced-random-forest}{%
+\subsubsection{Balanced Random Forest}\label{balanced-random-forest}}
+
+Similarly to the Balanced Bagging, the Balanced Random Forest from \texttt{imblearn} package balances the class distribution for each bootstrap with a random undersampler.
+
+The number of estimators \texttt{n\_estimators} and maximum depth of the tree classifiers \texttt{max\_depth} parameters were tuned with a grid cross validation (4 folds) on the training data.
+
+The best parameters found with the grid search were around 7-9 for \texttt{max\_depth} and around 40-80 for \texttt{n\_estimators}, with balanced accuracy around 0.46-0.47.
+
+The model was trained with these parameters:\\
+\texttt{max\_depth = 8, n\_estimators = 70}.
+
+    \hypertarget{test-the-model}{%
+\section{Test the Model}\label{test-the-model}}
+
+As explained in the data acquisition and preparation section \ref{data-source}, the accident database from 2016 was used to test the trained models.
+
+In order to run the predictive models on the 2016 data, these data were prepared similarly to what was done to the training dataset, namely:
+\begin{itemize}
+\item Replace -1 values with \texttt{NaN};
+\item Drop unused columns;
+\item Extract month value;
+\item Extract hour value;
+\item Fill \texttt{NaN} with 0 for columns `Special\_Conditions\_at\_Site', `Carriageway\_Hazards', `Junction\_Detail';
+\item Drop rows containing \texttt{NaN}s;
+\item Transform hour and month to time period and season;
+\item Transform day of the week to weekend indicator;
+\item Extract the features considered for these models;
+\item Scale with \texttt{StandardScaler} the feature set for the KNN Classifier.
+\end{itemize}
+
+After data cleaning, 135815 samples (roughly 99.4\% of 2016 raw data) were present in the 2016 processed dataset.
+
+\section{Results and Discussion}
+
+The trained models were used on the 2016 dataset.\\
+In order to verify the ability of accident severity prediction, two metrics were considered:
+\begin{itemize}
+\item Balanced Accuracy Score from \texttt{sklearn.metrics}
+\item Geometric Mean Score from \texttt{imblearn.metrics}
+\end{itemize}
+As already explained in the model training section, the Balanced Accuracy Score is the average of recall scores per target class.\\
+The Geometric Mean (G-Mean) score is the Nth-root of the product of class recalls, with N the number of classes.\\
+Both of these metrics score from 0, the worst value, to 1, the best value. The Balanced Accuracy scores 1/N (with N the number of classes) for a model which predicts only one single class output; the Geometric Mean scores 0 if at least one of the class is unrecognized (i.e. 0 predicted counts) by the model (for example, the dummy predictor which predicts only the majority class).
+
+The following figure summarizes the scores for the different models trained in this study, applied to the 2016 dataset.
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_122_0.png}
+    \end{center}
+
+The KNN model scored 0.36 with Balanced Accuracy, only slightly better than a majority class predictor. It scored 0.26 with G-Mean.
+
+For what concerns the Balanced Accuracy, all the other models scored slightly more than 0.4, with Decision Tree and Random Forest models (Balanced and with Balanced Weights) scoring between 0.46 and 0.47. The Bagging and AdaBoost scored around 0.42, while the Balanced Bagging scored roughly 0.44. The best score was obtained by the Balanced Random Forest Classifier with 0.47.
+
+With the G-Mean, the highest score was obtained by the Balanced Bagging Classifier with 0.42, followed by the Bagging and AdaBoost Classifiers around 0.40. The Balanced Random Forest scored 0.38, the Decision Tree 0.35 and the Random Forest with Balanced weights 0.33.
+
+All the scores were not extremely high. The models which performed best, according to these metrics, were the Balanced Bagging and the Balanced Random Forest Classifiers, i.e. the two \textit{ensemble} models with data \textit{undersampling}.
+
+The confusion matrix for the models on the 2016 data are shown in the following figure, where each cell was normalized with respect to the total number of actual true cases for that label.
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_124_0.png}
+    \end{center}
+
+As seen in the confusion matrix, the behavior of KNN Classifier was skewed towards a majority class predictor: roughly 60\% of the samples of each class were predicted as the most frequent label (`Slight').\\
+Bagging and AdaBoost Classifiers performed better in the prediction of the different classes. However, actual `Serious' class was still mostly predicted as `Slight' (50\% of cases), and correctly predicted only 27-28\% of times; true `Fatal' were correctly predicted only roughly 40\% of times.\\
+The Decision Tree and Random Forest with balanced weights performed better for both `Slight' and `Fatal' classes, reaching relative accuracy (recall) around 61-67\% for both classes. However, actual `Serious' cases were still missclassified roughly 50\% of times as `Slight' and 40\% as `Fatal'.
+
+The following figure refers to the ensemble model with undersampling.
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_125_0.png}
+    \end{center}
+
+The Balanced Bagging was the one with best performances (except for the poorly labeling KNN) on the `Serious' class, with correct predictions for roughly 30\% of actual true cases; it reached a recall around 50\% for both `Fatal' and `Slight' cases.\\
+The Balanced Random Forest performed similarly to the Decision Tree and Random Forest with balanced weights, with recall of 66 and 61\% for `Fatal' and `Slight', respectively. It still wrongly predicted 49\% of true `Serious' cases as `Slight', and the recall for `Serious' was around 14\%.
+
+    \hypertarget{balanced-models-for-2-target-classes}{%
+\subsection{Balanced Models for 2 target classes}\label{balanced-models-for-2-target-classes}}
+
+Given the performances of these models, as a tentative solution to improve the classification, the problem was further simplified by merging together the `Fatal' and `Serious' target classes, since these cases could both result in high cost for the society.
+
+Only the Balanced Bagging and the Balanced Random Forest Classifiers were trained on the simplified dataset, since these were the best performing models in the previous analysis.
+
+For the Balanced Bagging, the number of estimators parameter \texttt{n\_estimators} was tuned for the Balanced Bagging with cross validation (4 folds) on the new training data. The values of mean balanced accuracy was not changing much with \texttt{n\_estimators} in the range 50-400, with balanced accuracy score around 0.54. The model was trained with these parameters:\\
+\texttt{max\_features = X.shape[1], n\_estimators = 100}.
+
+For the Balanced Random Forest, the number of estimators \texttt{n\_estimators} and maximum depth of the tree classifiers \texttt{max\_depth} parameters were tuned with a grid cross validation (4 folds) on the training data. The best parameters were around 7-9 for \texttt{max\_depth} and around 30-80 for \texttt{n\_estimators}, with balanced accuracy around 0.57. The model was trained with these parameters:\\
+\texttt{max\_depth = 9, n\_estimators = 30}.
+
+The following figure shows the Balanced Accuracy and Geometric Mean scores for these two models, tested against the 2016 data (where `Fatal' and `Serious' classes were combined).
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_136_0.png}
+    \end{center}
+    
+Both models performed similarly, with a Balanced Accuracy around 0.56-0.57 and G-Mean around 0.55-0.56. The Balanced Random Forest was performing slightly better than the Balanced Bagging.\\
+The new confusion matrices are shown in the following figure.
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_138_0.png}
+    \end{center}
+    
+As confirmed by the scores, the outputs of the models were similar.\\
+Roughly 63-68\% of true `Slight' accidents were correctly predicted, but only 46-48\% of true cases belonging to the combined class `Fatal or Serious' accidents were correctly identified.
+
+    \hypertarget{feature-importance}{%
+\subsection{Feature importance}\label{feature-importance}}
+
+As an additional step, the use of tree classifiers enabled the possibility of ranking the input feature in order of importance in the classification process.\\
+In general, this ranking enables the selection of the most important features for the discrimination between the cases, since it ranks the contribution in reducing the impurity of branches.\\
+For the present problem, such an analysis could help in identifying the features for which a most evident distinction was present between slight, serious and fatal accidents, and somehow determine the feature which had a relatively "most dangerous" or "most safe" situation.
+
+The following figure shows the relative importance of the features for the Decision Tree and Random Forest models.
+
+    \begin{center}
+    \adjustimage{max size={0.7\linewidth}{0.7\paperheight}}{output_140_0.png}
+    \end{center}
+
+The most important feature was speed limit. This confirms the initial observation (Section~\ref{data-evaluation}) about the relative weight of serious and fatal accidents increasing with increasing speed limit, and thus probably the speed at which the accidents happened.\\
+The next important features were junction detail, light conditions, time period and road type. This confirms the fact that visibility (light conditions, time period) was an important factor in the severity of the accidents.\\
+It also points out that the type of junction was a discriminant factor for severity prediction. This means that some kind of junctions could be relatively more dangerous than others. For example, T or staggered junctions and slip roads had high relative weights of serious and fatal accidents, respectively. Roundabouts were the junctions with the lowest relative weight of both serious and fatal accidents.\\
+The Random Forest trained on the 2 classes dataset showed "road type" as the second most important feature; even in this case, roundabouts had the lowest relative weight of  serious and fatal accidents.\\
+Special conditions at site, weekend label, road surface conditions, weather conditions and season had lower relative impacts in the classification.
+
+The following figure shows the average relative importance of the feature for the base Decision Trees used in the Bagging Classifiers.
+
+    \begin{center}
+    \adjustimage{max size={0.7\linewidth}{0.7\paperheight}}{output_141_0.png}
+    \end{center}
+    
+Both Bagging Classifiers had similar feature importance rankings. The most important was speed, like in the previous graph. However, season scored second with these algorithms; from the relative weight graph in Section~\ref{data-evaluation} the correlation between season and accident severity was not clearly evident.\\
+Time period, junction detail and weather conditions followed in the importance ranking.\\
+Special conditions at site, weekend label, road surface conditions were still at the bottom of the ranking order.
+
+\section{Conclusions and Perspectives}
+
+In conclusion, this study analyzed UK accidents data from 2017 an 2018, and trained a series of models to predict the severity of accidents. It concentrated on the ability of the model to correctly predict critical accidents, i.e. fatal and serious accidents.
+
+It showed that the best performances, among the models tested during the study, was reached by undersampling ensemble models, namely Balanced Bagging and Balanced Random Forest. However, no model could achieve recall values larger than 50\% for all the classes at the same time, even when aggregating the serious and fatal labels into one single label.
+
+It showed the relative importance of features retrieved by the trained models: speed limit, visibility conditions and junction types had the most relative weight in accident severity classification.\\
+In particular, higher speed limits had a relatively larger chance of high severity in accidents.\\
+Bad visibility was shown to be an important factor increasing the probability of high severity.\\
+The evaluations on junction types suggested roundabouts as the relatively (to the total number of accidents happening in correspondence to them) most safe type of junctions, while T or staggered junctions and slip roads were the relatively most dangerous ones.
+
+Possible future development for this study could be the generalization of the classification for datasets divided into the different kind of road users involved in the accidents, for example drivers, bikers, cyclists, pedestrians etc, included in the additional tables available from the UK open data site.\\
+Identifying the most dangerous situations for each road user category could help Governments and police forces in targeting focused prevention measures. Moreover, it could trigger industries working in the field of safety to work on improved security devices for the identified particularly dangerous conditions for those road users.
+
+Other possible future developments could be the use of different classification models, such as Gradient Boosting, or the inclusions of features which were dropped in this study.
+
+Another possible development could be the analysis of the evolution of risk factors during the years, to determine the efficacy of prevention measures and vehicle safety improvements.
+
+It must be noted that on top of the \textit{relative weight} of factors in the severity of the accidents, \textit{absolute counts} (i.e. count histograms) are very important, since the total cost for the society derives from a combination of both relative weight of severity, and happening frequency.
+
+\end{document}
